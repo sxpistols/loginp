@@ -40,13 +40,13 @@ class RegisterUserViewController: UIViewController {
         print("Sign Up Button Tapped")
         
         if (firstNameTextField.text?.isEmpty)! || (lastNameTextField.text?.isEmpty)! || (emailAddressTextField.text?.isEmpty)! || (PasswordTextField.text?.isEmpty)! || (repeatPasswordTextField.text?.isEmpty)! {
-            
+
             //Display Message Error!
             displayMessage(userMessage: "Found Empty Field")
             return
-            
+
         }
-        
+
         if (PasswordTextField.text?.elementsEqual(repeatPasswordTextField.text!))! != true {
             //Display Message Password Field not Equal Repeat Password Field
             displayMessage(userMessage: "Password doesnt match!")
@@ -59,16 +59,18 @@ class RegisterUserViewController: UIViewController {
         MyActivityIndicator.startAnimating()
         view.addSubview(MyActivityIndicator)
         
-        let myUrl = URL(string: "http://localhost:5000/api/users")
+        let myUrl = URL(string: "http://127.0.0.1:5000/api/users")
         var request = URLRequest(url: myUrl!)
         
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "content-type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         
-        let postString = [ "username" : firstNameTextField.text!,
-        "password" : PasswordTextField.text! ] as [String:String]
+        let postString: [String: String] = [ "username": firstNameTextField.text!,
+        "password": PasswordTextField.text! ]
         
+//        let postString: [String: String] = [ "username": "johny",
+//                                             "password": "pas" ]
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: postString, options: .prettyPrinted)
             
@@ -94,7 +96,7 @@ class RegisterUserViewController: UIViewController {
                 
                 if let parseJson = json {
                     
-                    let userId = parseJson["userId"] as? String
+                    let userId = parseJson["username"] as? String
                     print("User Id:\(String(describing: userId!))")
                 
                     if (userId?.isEmpty)! {
